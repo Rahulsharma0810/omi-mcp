@@ -18,7 +18,7 @@ def _normalize_auth_header(value: str) -> str:
         auth_value = auth_value.partition(":")[2].strip()
         lower_auth_value = auth_value.lower()
     if lower_auth_value.startswith(BEARER_PREFIX_LOWER):
-        token = auth_value[len(BEARER_PREFIX_LOWER):].strip()
+        token = auth_value[len(BEARER_PREFIX):].strip()
         return f"{BEARER_PREFIX}{token}"
     return f"{BEARER_PREFIX}{auth_value}"
 
