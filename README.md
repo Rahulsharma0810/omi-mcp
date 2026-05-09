@@ -91,7 +91,7 @@ Add to your Claude MCP settings (`claude_mcp.json`):
 }
 ```
 
-**Note**: `configure_api_key` is removed. Configure auth via environment variables only.
+**Note**: `configure_api_key` is removed. Configure auth via environment variables only. If you previously used `configure_api_key(api_key="...")`, set `OMI_API_KEY="..."` before starting the server.
 
 ### Available Tools
 
