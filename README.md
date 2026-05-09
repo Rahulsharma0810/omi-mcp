@@ -2,32 +2,80 @@
 
 Extended MCP tools for Omi REST API (https://api.omi.me).
 
+## Why This MCP?
+
+Omi already provides an [official MCP server](https://docs.omi.me/doc/developer/mcp/introduction) for AI assistants. This project provides an **alternative** with additional capabilities:
+
+| Feature | Official Omi MCP | This MCP Server |
+|---------|-----------------|---------------|
+| **Memories** | 5 tools | 5 tools |
+| **Conversations** | 3 tools | 6 tools |
+| **Folders** | ❌ | ✅ List folders |
+| **Action Items** | ❌ | ✅ Full CRUD |
+| **API Keys** | ❌ | ✅ Manage keys |
+| **Transport** | SSE | STDIO |
+
+### What This MCP Adds
+
+- **Full Conversation Management**: Create, update, delete conversations
+- **Action Items**: Complete task/todo management (CRUD)
+- **Folders**: List and organize folders
+- **API Key Management**: Create and revoke API keys programmatically
+- **STDIO Transport**: Works with Claude Desktop, Cursor, and all MCP clients
+
 ## Features
 
-This MCP server wraps all 21 endpoints of the Omi REST API:
+This MCP server wraps the Omi REST API endpoints:
 
 - **Memories** (5 tools): list, create, create-batch, update, delete
-- **Conversations** (7 tools): list, create, create_full, create_from_segments, get, update, delete
+- **Conversations** (6 tools): list, create, create_from_segments, get, update, delete
 - **Folders** (1 tool): list
 - **Action Items** (5 tools): list, create, create-batch, update, delete
 - **API Keys** (3 tools): list, create, revoke
 
 ## Installation
 
+### Using uvx (recommended)
+
 ```bash
-pip install -e .
+uvx omi-mcp
+```
+
+### Using pip
+
+```bash
+pip install omi-mcp
+```
+
+### Development
+
+```bash
+pip install -e ".[dev]"
 ```
 
 ## Configuration
 
-Copy `.env.example` to `.env` and set your Omi API key:
+### Authentication
 
-```bash
-cp .env.example .env
-# Edit .env and set OMI_API_KEY
+Pass your API key (format: `omi_mcp_XXXXX`) - the `Bearer` prefix is added automatically:
+
+```
+Authorization: Bearer omi_mcp_XXXXX
 ```
 
-Get your API key from https://omi.me
+**Option 1**: Use `configure_api_key` tool (in Claude, call this first):
+
+```
+configure_api_key with api_key="omi_mcp_XXXXX"
+```
+
+**Option 2**: Set environment variable:
+
+```bash
+export OMI_API_KEY=omi_mcp_your_token
+```
+
+Get your API key from https://omi.me (Settings → Developer → Create Key)
 
 ## Usage
 
@@ -35,18 +83,33 @@ Get your API key from https://omi.me
 
 ```bash
 # Set the API key
-export OMI_API_KEY=omi_dev_your_key
+export OMI_API_KEY=omi_mcp_your_token
 
-# Run with stdio transport
+# Run with stdio transport (for MCP clients)
 python -m omi_mcp.server
-
-# Or run with HTTP transport
-MCP_HOST=0.0.0.0 MCP_PORT=8080 python -m omi_mcp.server
 ```
 
-### Using with MCP Clients
+### Claude Desktop MCP Config
 
-The server provides the following tools:
+Add to your Claude MCP settings (`claude_mcp.json`):
+
+```json
+{
+  "mcpServers": {
+    "omi-mcp": {
+      "command": "uvx",
+      "args": ["omi-mcp"]
+    }
+  }
+}
+```
+
+**Note**: In Claude, call `configure_api_key(api_key="omi_mcp_XXXXX")` first before using other tools.
+
+### Available Tools
+
+#### Configuration
+- `configure_api_key` - Set your Omi API key (call this first!)
 
 #### Memories
 - `get_memories` - List all memories
@@ -57,8 +120,7 @@ The server provides the following tools:
 
 #### Conversations
 - `get_conversations` - List all conversations
-- `create_conversation` - Create a conversation (minimal response)
-- `create_conversation_full` - Create a conversation (full response)
+- `create_conversation` - Create a conversation
 - `create_conversation_from_segments` - Create from transcript segments
 - `get_conversation` - Get a conversation by ID
 - `update_conversation` - Update a conversation

@@ -11,6 +11,15 @@ load_dotenv()
 BASE_URL = "https://api.omi.me/v1/dev/user"
 DEFAULT_TIMEOUT = 30.0
 
+# Global API key that can be set via configure tool
+_api_key: Optional[str] = None
+
+
+def set_api_key(key: str):
+    """Set the global API key."""
+    global _api_key
+    _api_key = key
+
 
 class OmiApiClient:
     """Client for Omi REST API."""
@@ -19,11 +28,12 @@ class OmiApiClient:
         """Initialize client with API key.
 
         Args:
-            api_key: Omi API key. Falls back to OMI_API_KEY env var.
+            api_key: Omi API key (format: omi_mcp_XXXXX).
+                    Falls back to _api_key global, then OMI_API_KEY env var.
         """
-        self.api_key = api_key or os.getenv("OMI_API_KEY")
+        self.api_key = api_key or _api_key or os.getenv("OMI_API_KEY")
         if not self.api_key:
-            raise ValueError("API key is required. Set OMI_API_KEY environment variable.")
+            raise ValueError("API key required. Use configure_api_key() tool first.")
         self.base_url = BASE_URL
         self.timeout = DEFAULT_TIMEOUT
 
