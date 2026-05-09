@@ -134,3 +134,11 @@ pip install -e ".[dev]"
 # Run tests
 pytest
 ```
+
+## Releases
+
+Publishing is automated through GitHub Actions.
+
+- Push a version tag like `v0.1.9`
+- The workflow creates a GitHub Release with built artifacts
+- The same workflow publishes the package to PyPI
