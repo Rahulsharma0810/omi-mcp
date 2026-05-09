@@ -367,14 +367,14 @@ def revoke_api_key(api_key_id: str) -> dict:
     return client.revoke_api_key(api_key_id=api_key_id)
 
 
-# Run the server
-if __name__ == "__main__":
-    main()
-
-
 def main():
     """Entry point for the MCP server."""
     import os
 
     # Run the server with stdio transport
     mcp.run(transport="stdio")
+
+
+# Run the server
+if __name__ == "__main__":
+    main()
