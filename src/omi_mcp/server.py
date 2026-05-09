@@ -348,11 +348,12 @@ def revoke_api_key(api_key_id: str) -> dict:
 
 # Run the server
 if __name__ == "__main__":
+    main()
+
+
+def main():
+    """Entry point for the MCP server."""
     import os
 
-    # Allow specifying host and port via environment variables
-    host = os.getenv("MCP_HOST", "0.0.0.0")
-    port = int(os.getenv("MCP_PORT", "8080"))
-
-    # Run the server
+    # Run the server with stdio transport
     mcp.run(transport="stdio")
