@@ -75,7 +75,10 @@ class OmiApiClient:
                 json=json,
             )
             response.raise_for_status()
-            return response.json()
+            data = response.json()
+            if isinstance(data, list):
+                return {"items": data, "total": len(data)}
+            return data
 
     # Memories endpoints
     def get_memories(
