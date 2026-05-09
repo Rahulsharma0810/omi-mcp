@@ -57,7 +57,7 @@ pip install -e ".[dev]"
 
 ### Authentication
 
-Pass your API key (format: `omi_mcp_XXXXX`) - the `Bearer` prefix is added automatically:
+Pass your API key with Bearer prefix:
 
 ```
 Authorization: Bearer omi_mcp_XXXXX

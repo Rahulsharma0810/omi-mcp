@@ -12,9 +12,14 @@ _api_key: Optional[str] = None
 
 
 def set_api_key(key: str):
-    """Set the global API key."""
+    """Set the global API key.
+    
+    Args:
+        key: API key (format: Bearer omi_mcp_XXXXX or just omi_mcp_XXXXX)
+    """
     global _api_key
-    _api_key = key
+    # If key already has Bearer prefix, use as-is; otherwise add it
+    _api_key = key if key.startswith("Bearer ") else f"Bearer {key}"
 
 
 class OmiApiClient:
@@ -36,7 +41,7 @@ class OmiApiClient:
     def _headers(self) -> dict[str, str]:
         """Get headers with authentication."""
         return {
-            "Authorization": f"Bearer {self.api_key}",
+            "Authorization": self.api_key,
             "Content-Type": "application/json",
         }
 
