@@ -57,13 +57,15 @@ pip install -e ".[dev]"
 
 ### Authentication
 
-Pass your API key with the full `Authorization` header:
+Set one of these environment variables before starting the MCP server:
 
 ```
-Authorization: Bearer omi_mcp_XXXXX
+OMI_AUTHORIZATION_HEADER="Authorization: Bearer omi_mcp_XXXXX"
+# or
+AUTHORIZATION="Bearer omi_mcp_XXXXX"
+# or
+OMI_API_KEY="omi_mcp_XXXXX"
 ```
-
-Use `configure_api_key` tool in Claude (include the `Bearer ` prefix):
 
 ## Usage
 
@@ -89,12 +91,9 @@ Add to your Claude MCP settings (`claude_mcp.json`):
 }
 ```
 
-**Note**: In Claude, call `configure_api_key(api_key="omi_mcp_XXXXX")` first before using other tools.
+**Note**: `configure_api_key` is removed. Configure auth via environment variables only.
 
 ### Available Tools
-
-#### Configuration
-- `configure_api_key` - Set your Omi API key (call this first!)
 
 #### Memories
 - `get_memories` - List all memories

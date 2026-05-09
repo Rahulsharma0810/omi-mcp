@@ -1,5 +1,6 @@
 """API client for Omi REST API."""
 
+import os
 from typing import Any, Optional
 
 import httpx
@@ -7,19 +8,15 @@ import httpx
 BASE_URL = "https://api.omi.me/v1/dev/user"
 DEFAULT_TIMEOUT = 30.0
 
-# Global API key that can be set via configure tool
-_api_key: Optional[str] = None
-
-
-def set_api_key(key: str):
-    """Set the global API key.
-    
-    Args:
-        key: API key (format: Bearer omi_mcp_XXXXX or just omi_mcp_XXXXX)
-    """
-    global _api_key
-    # If key already has Bearer prefix, use as-is; otherwise add it
-    _api_key = key if key.startswith("Bearer ") else f"Bearer {key}"
+def _normalize_auth_header(value: str) -> str:
+    """Normalize API key/Auth header into `Authorization: Bearer ...` value."""
+    auth_value = value.strip()
+    if auth_value.lower().startswith("authorization:"):
+        auth_value = auth_value.split(":", 1)[1].strip()
+    if auth_value.lower().startswith("bearer "):
+        token = auth_value[7:].strip()
+        return f"Bearer {token}"
+    return f"Bearer {auth_value}"
 
 
 class OmiApiClient:
@@ -29,12 +26,19 @@ class OmiApiClient:
         """Initialize client with API key.
 
         Args:
-            api_key: Omi API key (format: omi_mcp_XXXXX).
-                    Falls back to _api_key global.
+            api_key: Omi API key or auth header value.
         """
-        self.api_key = api_key or _api_key
-        if not self.api_key:
-            raise ValueError("API key required. Use configure_api_key() tool first.")
+        auth_value = (
+            api_key
+            or os.getenv("OMI_AUTHORIZATION_HEADER")
+            or os.getenv("AUTHORIZATION")
+            or os.getenv("OMI_API_KEY")
+        )
+        if not auth_value:
+            raise ValueError(
+                "API key required. Set OMI_AUTHORIZATION_HEADER, AUTHORIZATION, or OMI_API_KEY."
+            )
+        self.api_key = _normalize_auth_header(auth_value)
         self.base_url = BASE_URL
         self.timeout = DEFAULT_TIMEOUT
 
