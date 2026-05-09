@@ -369,7 +369,16 @@ def revoke_api_key(api_key_id: str) -> dict:
 
 def main():
     """Entry point for the MCP server."""
-    import os
+    import argparse
+
+    # Parse command line arguments
+    parser = argparse.ArgumentParser(description="Omi MCP Server")
+    parser.add_argument("--api-key", "-k", help="API key (format: Bearer omi_mcp_XXXXX)")
+    args = parser.parse_args()
+
+    # Set API key if provided via command line
+    if args.api_key:
+        _set_api_key(args.api_key)
 
     # Run the server with stdio transport
     mcp.run(transport="stdio")

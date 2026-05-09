@@ -1,6 +1,6 @@
 [project]
 name = "omi-mcp"
-version = "0.1.6"
+version = "0.1.7"
 description = "Extended MCP tools for Omi REST API"
 readme = "README.md"
 requires-python = ">=3.10"

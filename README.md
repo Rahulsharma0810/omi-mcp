@@ -70,8 +70,8 @@ Use `configure_api_key` tool in Claude (include the `Bearer ` prefix):
 ### Running the MCP Server
 
 ```bash
-# Run with stdio transport (for MCP clients)
-python -m omi_mcp.server
+# Run with API key via command line
+python -m omi_mcp.server --api-key "Bearer omi_mcp_XXXXX"
 ```
 
 ### Claude Desktop MCP Config
@@ -83,18 +83,13 @@ Add to your Claude MCP settings (`claude_mcp.json`):
   "mcpServers": {
     "omi-mcp": {
       "command": "uvx",
-      "args": ["omi-mcp"]
+      "args": ["omi-mcp", "--api-key", "Bearer omi_mcp_XXXXX"]
     }
   }
 }
 ```
 
-**Note**: In Claude, call `configure_api_key(api_key="omi_mcp_XXXXX")` first before using other tools.
-
 ### Available Tools
-
-#### Configuration
-- `configure_api_key` - Set your Omi API key (call this first!)
 
 #### Memories
 - `get_memories` - List all memories
