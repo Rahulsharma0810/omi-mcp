@@ -63,28 +63,13 @@ Pass your API key (format: `omi_mcp_XXXXX`) - the `Bearer` prefix is added autom
 Authorization: Bearer omi_mcp_XXXXX
 ```
 
-**Option 1**: Use `configure_api_key` tool (in Claude, call this first):
-
-```
-configure_api_key with api_key="omi_mcp_XXXXX"
-```
-
-**Option 2**: Set environment variable:
-
-```bash
-export OMI_API_KEY=omi_mcp_your_token
-```
-
-Get your API key from https://omi.me (Settings → Developer → Create Key)
+Use `configure_api_key` tool in Claude:
 
 ## Usage
 
 ### Running the MCP Server
 
 ```bash
-# Set the API key
-export OMI_API_KEY=omi_mcp_your_token
-
 # Run with stdio transport (for MCP clients)
 python -m omi_mcp.server
 ```

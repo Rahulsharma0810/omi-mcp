@@ -1,12 +1,8 @@
 """API client for Omi REST API."""
 
-import os
 from typing import Any, Optional
 
 import httpx
-from dotenv import load_dotenv
-
-load_dotenv()
 
 BASE_URL = "https://api.omi.me/v1/dev/user"
 DEFAULT_TIMEOUT = 30.0
@@ -29,9 +25,9 @@ class OmiApiClient:
 
         Args:
             api_key: Omi API key (format: omi_mcp_XXXXX).
-                    Falls back to _api_key global, then OMI_API_KEY env var.
+                    Falls back to _api_key global.
         """
-        self.api_key = api_key or _api_key or os.getenv("OMI_API_KEY")
+        self.api_key = api_key or _api_key
         if not self.api_key:
             raise ValueError("API key required. Use configure_api_key() tool first.")
         self.base_url = BASE_URL
