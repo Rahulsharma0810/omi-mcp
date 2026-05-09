@@ -8,14 +8,17 @@ import httpx
 BASE_URL = "https://api.omi.me/v1/dev/user"
 DEFAULT_TIMEOUT = 30.0
 BEARER_PREFIX = "Bearer "
+BEARER_PREFIX_LOWER = "bearer "
 
 def _normalize_auth_header(value: str) -> str:
     """Normalize API key/Auth header into `Authorization: Bearer ...` value."""
     auth_value = value.strip()
-    if auth_value.lower().startswith("authorization:"):
+    lower_auth_value = auth_value.lower()
+    if lower_auth_value.startswith("authorization:"):
         auth_value = auth_value.partition(":")[2].strip()
-    if auth_value[: len("bearer ")].lower() == "bearer ":
-        token = auth_value[len("bearer "):].strip()
+        lower_auth_value = auth_value.lower()
+    if lower_auth_value.startswith(BEARER_PREFIX_LOWER):
+        token = auth_value[len(BEARER_PREFIX_LOWER):].strip()
         return f"{BEARER_PREFIX}{token}"
     return f"{BEARER_PREFIX}{auth_value}"
 
