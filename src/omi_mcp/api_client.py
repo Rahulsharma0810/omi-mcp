@@ -134,7 +134,7 @@ class OmiApiClient:
 
         Returns: Full conversation object from Omi.
         """
-        return self._request("POST", "/conversations/full", json={"text": text})
+        return self._request("POST", "/conversations", json={"text": text})
 
     def create_conversation_from_segments(
         self,
