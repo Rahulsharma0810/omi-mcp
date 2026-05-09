@@ -11,6 +11,9 @@ dependencies = [
     "python-dotenv>=1.0.0",
 ]
 
+[project.scripts]
+omi-mcp = "omi_mcp.server:main"
+
 [project.optional-dependencies]
 dev = [
     "pytest>=8.0.0",
@@ -23,3 +26,6 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/omi_mcp"]
+
+[tool.hatch.scripts]
+run = "omi_mcp.server:main"
