@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-BASE_URL = "https://api.omi.me"
+BASE_URL = "https://api.omi.me/v1/dev/user"
 DEFAULT_TIMEOUT = 30.0
 
 
@@ -66,7 +66,7 @@ class OmiApiClient:
             params["limit"] = limit
         if offset is not None:
             params["offset"] = offset
-        return self._request("GET", "/memories", params=params)
+        return self._request("GET", "/user/memories", params=params)
 
     def create_memory(self, content: str) -> dict[str, Any]:
         """Create a single memory."""
