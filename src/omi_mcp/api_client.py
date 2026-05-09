@@ -14,8 +14,8 @@ def _normalize_auth_header(value: str) -> str:
     auth_value = value.strip()
     if auth_value.lower().startswith("authorization:"):
         auth_value = auth_value.partition(":")[2].strip()
-    if auth_value.lower().startswith("bearer "):
-        token = auth_value[len("bearer ") :].strip()
+    if auth_value[: len("bearer ")].lower() == "bearer ":
+        token = auth_value[len("bearer "):].strip()
         return f"{BEARER_PREFIX}{token}"
     return f"{BEARER_PREFIX}{auth_value}"
 
