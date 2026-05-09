@@ -74,7 +74,12 @@ class OmiApiClient:
                 params=params,
                 json=json,
             )
-            response.raise_for_status()
+            if response.is_error:
+                try:
+                    detail = response.json()
+                except Exception:
+                    detail = response.text
+                raise ValueError(f"Omi API error {response.status_code}: {detail}")
             data = response.json()
             if isinstance(data, list):
                 return {"items": data, "total": len(data)}
@@ -129,12 +134,17 @@ class OmiApiClient:
             params["folder_id"] = folder_id
         return self._request("GET", "/conversations", params=params)
 
-    def create_conversation(self, text: str) -> dict[str, Any]:
-        """Create a conversation from text.
-
-        Returns: Full conversation object from Omi.
-        """
-        return self._request("POST", "/conversations", json={"text": text})
+    def create_conversation(
+        self,
+        text: str,
+        text_source: str = "other_text",
+        language: Optional[str] = None,
+    ) -> dict[str, Any]:
+        """Create a conversation from text."""
+        payload: dict[str, Any] = {"text": text, "text_source": text_source}
+        if language is not None:
+            payload["language"] = language
+        return self._request("POST", "/conversations", json=payload)
 
     def create_conversation_from_segments(
         self,

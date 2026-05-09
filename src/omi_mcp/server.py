@@ -1,6 +1,6 @@
 """Main MCP server for Omi REST API."""
 
-from typing import Any, Optional
+from typing import Any, Literal, Optional
 
 from fastmcp import FastMCP
 from fastmcp.server.middleware import Middleware, MiddlewareContext
@@ -135,17 +135,23 @@ def get_conversations(
 
 
 @mcp.tool()
-def create_conversation(text: str) -> dict:
+def create_conversation(
+    text: str,
+    text_source: Literal["audio_transcript", "message", "other_text"] = "other_text",
+    language: Optional[str] = None,
+) -> dict:
     """Create a conversation from text.
 
     Args:
         text: The conversation text.
+        text_source: Source type — audio_transcript, message, or other_text.
+        language: Language code (e.g. 'en').
 
     Returns:
         Dictionary with created conversation details from Omi.
     """
     client = get_client()
-    return client.create_conversation(text=text)
+    return client.create_conversation(text=text, text_source=text_source, language=language)
 
 
 @mcp.tool()
