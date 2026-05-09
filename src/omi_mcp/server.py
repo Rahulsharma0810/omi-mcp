@@ -4,10 +4,31 @@ from typing import Any, Optional
 
 from fastmcp import FastMCP
 
-from omi_mcp.api_client import get_client
+from omi_mcp.api_client import get_client, set_api_key as _set_api_key
 
 # Create single MCP server
 mcp = FastMCP("omi-mcp")
+
+
+# =============================================================================
+# Configuration
+# =============================================================================
+
+
+@mcp.tool()
+def configure_api_key(api_key: str) -> dict:
+    """Configure the Omi API key.
+
+    Args:
+        api_key: Your Omi API key (format: omi_mcp_XXXXX).
+               Get from https://omi.me → Settings → Developer → Create Key.
+
+    Returns:
+        Dictionary with status confirmation.
+    """
+    _set_api_key(api_key)
+    return {"status": "ok", "message": "API key configured"}
+
 
 # =============================================================================
 # Memory Tools
