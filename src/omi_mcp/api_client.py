@@ -40,7 +40,7 @@ class OmiApiClient:
         )
         if not auth_value:
             raise ValueError(
-                "API key required. Set OMI_AUTHORIZATION_HEADER, AUTHORIZATION, or OMI_API_KEY."
+                "API key required. Pass Authorization header or set OMI_AUTHORIZATION_HEADER / OMI_API_KEY env var."
             )
         self.api_key = _normalize_auth_header(auth_value)
         self.base_url = BASE_URL
@@ -249,5 +249,18 @@ class OmiApiClient:
 
 
 def get_client(api_key: Optional[str] = None) -> OmiApiClient:
-    """Get Omi API client instance."""
+    """Get Omi API client instance.
+
+    Resolves API key from (in order):
+    1. Explicit api_key argument
+    2. HTTP Authorization header from current request
+    3. OMI_AUTHORIZATION_HEADER / AUTHORIZATION / OMI_API_KEY env vars
+    """
+    if not api_key:
+        try:
+            from fastmcp.server.dependencies import get_http_request
+            request = get_http_request()
+            api_key = request.headers.get("authorization") or request.headers.get("Authorization")
+        except Exception:
+            pass
     return OmiApiClient(api_key=api_key)
