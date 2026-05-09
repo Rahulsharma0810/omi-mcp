@@ -1,9 +1,13 @@
 """API client for Omi REST API."""
 
 import os
+from contextvars import ContextVar
 from typing import Any, Optional
 
 import httpx
+
+# Set by AuthMiddleware in server.py before each tool call
+_request_auth: ContextVar[str] = ContextVar("_request_auth", default="")
 
 BASE_URL = "https://api.omi.me/v1/dev/user"
 DEFAULT_TIMEOUT = 30.0
@@ -257,10 +261,14 @@ def get_client(api_key: Optional[str] = None) -> OmiApiClient:
     3. OMI_AUTHORIZATION_HEADER / AUTHORIZATION / OMI_API_KEY env vars
     """
     if not api_key:
+        # Try ContextVar set by AuthMiddleware (works for all transports)
+        api_key = _request_auth.get() or None
+    if not api_key:
+        # Fallback: direct HTTP request context (works in some transport configs)
         try:
             from fastmcp.server.dependencies import get_http_request
             request = get_http_request()
-            api_key = request.headers.get("authorization") or request.headers.get("Authorization")
+            api_key = request.headers.get("authorization") or None
         except Exception:
             pass
     return OmiApiClient(api_key=api_key)

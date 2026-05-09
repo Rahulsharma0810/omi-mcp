@@ -3,11 +3,33 @@
 from typing import Any, Optional
 
 from fastmcp import FastMCP
+from fastmcp.server.middleware import Middleware, MiddlewareContext
 
-from omi_mcp.api_client import get_client
+from omi_mcp.api_client import _request_auth, get_client
+
+
+class AuthMiddleware(Middleware):
+    """Extract Authorization header from HTTP request and store in ContextVar."""
+
+    async def on_request(self, context: MiddlewareContext, call_next):
+        try:
+            from fastmcp.server.dependencies import get_http_request
+            request = get_http_request()
+            auth = request.headers.get("authorization", "")
+            if auth:
+                token = _request_auth.set(auth)
+                try:
+                    return await call_next(context)
+                finally:
+                    _request_auth.reset(token)
+        except Exception:
+            pass
+        return await call_next(context)
+
 
 # Create single MCP server
 mcp = FastMCP("omi-mcp")
+mcp.add_middleware(AuthMiddleware())
 
 
 # =============================================================================
