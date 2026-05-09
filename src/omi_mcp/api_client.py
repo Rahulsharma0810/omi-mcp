@@ -104,11 +104,10 @@ class OmiApiClient:
         return self._request("GET", "/conversations", params=params)
 
     def create_conversation(self, text: str) -> dict[str, Any]:
-        """Create a conversation from text (minimal response)."""
-        return self._request("POST", "/conversations", json={"text": text})
+        """Create a conversation from text.
 
-    def create_conversation_full(self, text: str) -> dict[str, Any]:
-        """Create a conversation from text (full response)."""
+        Returns: Full conversation object from Omi.
+        """
         return self._request("POST", "/conversations/full", json={"text": text})
 
     def create_conversation_from_segments(

@@ -113,30 +113,16 @@ def get_conversations(
 
 @mcp.tool()
 def create_conversation(text: str) -> dict:
-    """Create a conversation from text (minimal response).
+    """Create a conversation from text.
 
     Args:
         text: The conversation text.
 
     Returns:
-        Dictionary with created conversation details (id, status, discarded).
+        Dictionary with created conversation details from Omi.
     """
     client = get_client()
     return client.create_conversation(text=text)
-
-
-@mcp.tool()
-def create_conversation_full(text: str) -> dict:
-    """Create a conversation from text (full response).
-
-    Args:
-        text: The conversation text.
-
-    Returns:
-        Dictionary with full conversation object.
-    """
-    client = get_client()
-    return client.create_conversation_full(text=text)
 
 
 @mcp.tool()
