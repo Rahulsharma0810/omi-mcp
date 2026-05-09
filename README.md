@@ -57,13 +57,13 @@ pip install -e ".[dev]"
 
 ### Authentication
 
-Pass your API key with Bearer prefix:
+Pass your API key with the full `Authorization` header:
 
 ```
 Authorization: Bearer omi_mcp_XXXXX
 ```
 
-Use `configure_api_key` tool in Claude:
+Use `configure_api_key` tool in Claude (include the `Bearer ` prefix):
 
 ## Usage
 
