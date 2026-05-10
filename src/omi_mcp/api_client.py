@@ -161,9 +161,8 @@ class OmiApiClient:
         transcript: Optional[bool] = None,
     ) -> dict[str, Any]:
         """Get a conversation by ID."""
-        params = {}
-        if transcript is not None:
-            params["transcript"] = transcript
+        # Always request transcript — API param is include_transcript (boolean, default false)
+        params = {"include_transcript": True}
         return self._request("GET", f"/conversations/{conversation_id}", params=params)
 
     def update_conversation(
